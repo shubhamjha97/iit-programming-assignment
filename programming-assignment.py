@@ -1,7 +1,16 @@
 import tensorflow as tf
 import numpy as np
+from time import time
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # ignore tensorflow warnings
+
+def timeit(fn):
+	def wrapper(*args, **kwargs):
+		start = time()
+		res = fn(*args, **kwargs)
+		print(fn.__name__, "took", time() - start, "seconds.")
+		return res
+	return wrapper
 
 def softmax_implementation(mat, mask, s):
 	'''
@@ -16,6 +25,7 @@ def softmax_implementation(mat, mask, s):
 	den = tf.reshape(tf.reduce_sum(num, reduction_indices=[1]), shape=[s,1]) # calculate denominator by summing all the numerators in a particular row
 	return tf.divide(num, den)
 
+@timeit
 def f(l):
 	'''
 	Function implements the required graph.

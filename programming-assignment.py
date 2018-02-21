@@ -21,7 +21,8 @@ def softmax_implementation(mat, mask, s):
 			s : length of the test list
 	Outputs: A matrix with the row-wise softmax calculated on the nonzero values
 	'''
-	num = tf.multiply(tf.exp(mat), mask) # apply mask to matrix and calculate the numerator
+	mat_corrected = tf.subtract(mat, tf.reduce_max(mat, axis=[1])) # subtract the largest element from each row of the matrix. Done to prevent overflow.
+	num = tf.multiply(tf.exp(mat_corrected), mask) # apply mask to matrix and calculate the numerator
 	den = tf.reshape(tf.reduce_sum(num, reduction_indices=[1]), shape=[s,1]) # calculate denominator by summing all the numerators in a particular row
 	return tf.divide(num, den)
 
@@ -35,6 +36,7 @@ def f(l):
 	'''
 	s=len(l) # find length of test  list
 	ip=tf.placeholder(tf.float32, shape=[1, s]) # create input placeholder
+	#ip_corrected=tf.subtract(ip, tf.reduce_max(ip, axis=[1]))
 	mat=tf.tile(ip, [s, 1]) # stack the input array vertically s times
 	temp_ones=tf.ones([s,s], tf.float32)
 
@@ -59,4 +61,5 @@ def f(l):
 
 if __name__=='__main__':
 	test_list=[1,2,3,4] # test list
-	print(f(test_list)) # print result
+	large_inputs = [1000.0, 1001.0, 1002.0]
+	print(f(large_inputs)) # print result

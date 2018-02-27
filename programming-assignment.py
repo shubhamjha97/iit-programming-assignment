@@ -36,7 +36,6 @@ def f(l):
 	'''
 	s=len(l) # find length of test  list
 	ip=tf.placeholder(tf.float32, shape=[1, s]) # create input placeholder
-	#ip_corrected=tf.subtract(ip, tf.reduce_max(ip, axis=[1]))
 	mat=tf.tile(ip, [s, 1]) # stack the input array vertically s times
 	temp_ones=tf.ones([s,s], tf.float32)
 
